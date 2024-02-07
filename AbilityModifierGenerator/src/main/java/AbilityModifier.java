@@ -1,12 +1,20 @@
+import java.util.Locale;
+
 public class AbilityModifier {
 
     private int score;
-    private String ability;
+    public enum Ability {
+        STRENGTH, CONSTITUTION, DEXTERITY, WISDOM, INTELLIGENCE, CHARISMA
+    }
+    private Ability ability;
+    // try creating an enum Ability to hold the ability names as constants
 
     public AbilityModifier() {}
 
     public AbilityModifier(String ability, int score) {
-        this.ability = ability;
+        if (isValidAbility(ability)) {
+            setAbility(ability);
+        }
         if (validateScore(score)) {
             this.score = score;
         } else {
@@ -14,12 +22,26 @@ public class AbilityModifier {
         }
     }
 
-    public String getAbility() {
-        return ability;
+    public void setAbility(String ability) {
+        if (ability.equalsIgnoreCase("strength")) {
+            this.ability = Ability.STRENGTH;
+        } else if (ability.equalsIgnoreCase("constitution")) {
+            this.ability = Ability.CONSTITUTION;
+        } else if (ability.equalsIgnoreCase("dexterity")) {
+            this.ability = Ability.DEXTERITY;
+        } else if (ability.equalsIgnoreCase("wisdom")) {
+            this.ability = Ability.WISDOM;
+        } else if (ability.equalsIgnoreCase("intelligence")) {
+            this.ability = Ability.INTELLIGENCE;
+        } else if (ability.toString().equalsIgnoreCase("charisma")) {
+            this.ability = Ability.CHARISMA;
+        } else {
+            System.out.println("That is not a valid ability. Please try again.");
+        }
     }
 
-    public void setAbility(String ability) {
-        this.ability = ability;
+    public String getAbility() {
+        return ability.toString().toLowerCase();
     }
 
     public int getScore() {
@@ -27,11 +49,22 @@ public class AbilityModifier {
     }
 
     public void setScore(int score) {
-        this.score = score;
+        if (validateScore(score)) {
+            this.score = score;
+        }
     }
 
     public boolean validateScore(int score) {
         return score <= 20 && score >= 0;
+    }
+
+    public boolean isValidAbility(String ability) {
+        for (Ability a : Ability.values()) {
+            if (ability.equalsIgnoreCase(a.toString())) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public void raiseAbilityScore(int amountToRaiseBy) {
@@ -74,9 +107,9 @@ public class AbilityModifier {
 
     public String toString() {
         if (score >= 10) {
-            return "Your character's ability modifier is +" + this.calculateAbilityModifier();
+            return "Your character's " + this.getAbility() + " modifier is +" + this.calculateAbilityModifier();
         } else {
-            return "Your character's ability modifier is -" + this.calculateAbilityModifier();
+            return "Your character's " + this.getAbility() + " modifier is -" + this.calculateAbilityModifier();
         }
     }
 
